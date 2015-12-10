@@ -1,5 +1,7 @@
 module Main where
 
+import CA
+import CA.Rules
 import Constants as C
 import Canvas
 
