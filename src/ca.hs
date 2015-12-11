@@ -31,14 +31,14 @@ getNeighbours :: Cell -> Universe -> [Cell]
 getNeighbours ((x, y), _) u = [ getCell (x+x', y+y') u | x' <- [-1 .. 1], y' <- [-1 .. 1], x' /= 0 || y' /=0 ]
 
 getCell :: Coord -> Universe -> Cell
-getCell (x, y) (Universe _ _ cells) =  getCell' $ find (\((x', y'), _) -> x == x' && y == y') $ cells
-    where getCell' (Just c)  = c
-          getCell' Nothing =  ((-1,-1), False)
+getCell (x, y) (Universe _ cols cells) | x < 0 || y < 0                = ((-1,-1), False)
+                                       | (x + y * cols) - 1 > length cells = ((-1,-1), False)
+                                       | otherwise                     = cells !! (x + y * cols)
 
 toCell :: Coord -> Bool -> Cell
 toCell c s = (c, s)
 
 createUniverse :: RandomGen g => g -> Int -> Int -> Universe
-createUniverse gen columns rows = 
+createUniverse gen rows columns = 
     let coords = [ (x, y) | x <- [0 .. columns], y <- [0 .. rows] ]
      in Universe rows columns $ zipWith (toCell) coords (randoms gen)
