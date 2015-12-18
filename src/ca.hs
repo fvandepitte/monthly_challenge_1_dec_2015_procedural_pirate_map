@@ -2,6 +2,9 @@ module CA where
 
 import System.Random
 import Data.List
+import Control.Parallel.Strategies (rseq, parMap)
+
+
 
 type Coord = (Int, Int)
 type Cell  = (Coord, Bool)
@@ -12,14 +15,14 @@ getCells :: Universe -> [Cell]
 getCells (Universe _ _ cells) = cells
 
 instance Show Universe where
-    show (Universe _ cols cells) = unlines $ toRows cols $ map toChar cells
+    show (Universe _ cols cells) = unlines $ toRows cols $ parMap rseq toChar cells
         where toRows _    []     = []
               toRows cls cells'  = take cls cells' : (toRows cls $ drop cls cells')
               toChar (_ , True)  = '*'
               toChar (_ , False) = ' '
 
 nextGeneration :: Rule -> Universe -> Universe
-nextGeneration rule u = nextGeneration'' u $ map (nextGeneration' rule) $ map (\c -> (c, getNeighbours c u))  $ getCells u
+nextGeneration rule u = nextGeneration'' u $ parMap rseq (nextGeneration' rule) $ parMap rseq (\c -> (c, getNeighbours c u))  $ getCells u
 
 nextGeneration' :: Rule -> (Cell, [Cell]) -> Cell
 nextGeneration' rule (c, cells) = rule c cells

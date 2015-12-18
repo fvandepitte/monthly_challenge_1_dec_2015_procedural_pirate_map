@@ -28,3 +28,4 @@ executable piratemap
                      , vector >=0.9
                      , vector-algorithms >=0.3
                      , random
+                     , parallel
