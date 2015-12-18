@@ -25,9 +25,6 @@ createUniverse seed rows cols noiseGen = Universe rows cols $ noiseGen seed rows
 createPerlinData :: NoiseGen
 createPerlinData seed rows cols = map (noiseValue (perlinGen (fst (random (mkStdGen seed))))) $ createGrid rows cols
 
-createRidgedData :: NoiseGen
-createRidgedData seed rows cols = map (noiseValue (ridgedGen (fst (random (mkStdGen seed))))) $ createGrid rows cols
-
 createSphereData :: NoiseGen
 createSphereData r rows cols = createSphere (fromIntegral r) $ createGrid rows cols
 
@@ -72,17 +69,8 @@ scale = 0.05
 persistance :: Double
 persistance = 0.5
 
-frequency :: Double
-frequency = 1
-
-lacunarity :: Double
-lacunarity  = 2
-
 perlinGen :: Int -> Perlin
 perlinGen s = perlin s octaves scale persistance
-
-ridgedGen :: Int -> Ridged
-ridgedGen s = ridged s octaves scale frequency lacunarity
 
 mapToString :: [Bool] -> String
 mapToString = map mapToString'
