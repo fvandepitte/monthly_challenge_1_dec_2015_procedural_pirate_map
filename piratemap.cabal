@@ -29,3 +29,4 @@ executable piratemap
                      , vector-algorithms >=0.3
                      , random
                      , parallel
+                     , hsnoise
